@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CFO Helper | AI-Powered Financial Guidance</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #0d47a1; --secondary-color: #1976d2; --accent-color: #ffc107; --success-color: #2e7d32; --danger-color: #c62828; --text-color: #333; --text-light-gray: #555; --light-gray: #f4f7f6; --white: #ffffff; --font-family: 'Poppins', sans-serif;
+        }
+        html { scroll-behavior: smooth; }
+        body { margin: 0; font-family: var(--font-family); color: var(--text-color); background-color: var(--white); line-height: 1.6; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+        h1, h2, h3 { font-weight: 600; }
+        .page-section { display: none; }
+        .page-section.active { display: block; }
+        header { background: var(--white); box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 1rem 0; position: sticky; top: 0; z-index: 100; }
+        header .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: 700; color: var(--primary-color); text-decoration: none; }
+        nav ul { list-style: none; margin: 0; padding: 0; display: flex; }
+        nav ul li a { color: var(--text-color); text-decoration: none; font-weight: 600; padding: 0.5rem 1rem; transition: color 0.3s; cursor: pointer; }
+        nav ul li a:hover, nav ul li a.active { color: var(--primary-color); }
+        .btn { display: inline-block; padding: 12px 28px; border-radius: 5px; text-decoration: none; font-weight: 600; transition: background-color 0.3s, transform 0.2s; cursor: pointer; border: none; }
+        .btn-primary { background-color: var(--primary-color); color: var(--white); }
+        .btn-primary:hover { background-color: var(--secondary-color); transform: translateY(-2px); }
+        .btn-secondary { background-color: var(--accent-color); color: var(--text-color); }
+        .btn-secondary:hover { background-color: #ffb300; transform: translateY(-2px); }
+        .hero { background-color: var(--light-gray); text-align: center; padding: 5rem 1rem; }
+        .hero h1 { font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem; }
+        .hero p { font-size: 1.2rem; max-width: 600px; margin: 0 auto 2rem auto; }
+        .live-data-widget { padding: 2rem 0; text-align: center; }
+        .live-data-widget h3 { margin-bottom: 1rem; color: var(--primary-color); }
+        .live-data-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; max-width: 800px; margin: auto; }
+        .live-data-item { background: var(--white); padding: 1rem; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+        .live-data-item .label { font-size: 0.9rem; color: #666; }
+        .live-data-item .value { font-size: 1.8rem; font-weight: 700; color: var(--success-color); }
+        .pathway-badge { margin-top: 2rem; font-size: 0.8rem; color: #777; }
+        .live-indicator { display: inline-block; width: 8px; height: 8px; background-color: var(--success-color); border-radius: 50%; margin-right: 5px; animation: blink 1.5s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .features { padding: 4rem 0; background-color: var(--light-gray); }
+        .features .container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .feature-card { background: var(--white); border: 1px solid #ddd; border-radius: 8px; padding: 2rem; text-align: center; }
+        .experts-section { padding: 4rem 0; text-align: center; }
+        .experts-section h2 { font-size: 2.8rem; color: var(--primary-color); margin-bottom: 2.5rem; }
+        .experts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+        .expert-card { background: var(--white); padding: 2rem; border-radius: 10px; box-shadow: 0 8px 25px rgba(0,0,0,0.08); cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; }
+        .expert-card:hover { transform: translateY(-5px); box-shadow: 0 12px 35px rgba(0,0,0,0.1); }
+        .expert-photo img { width: 120px; height: 120px; border-radius: 50%; margin: 0 auto 1.5rem auto; border: 4px solid var(--secondary-color); object-fit: cover; }
+        .expert-card h3 { color: var(--primary-color); margin-bottom: 0.25rem; }
+        .expert-card .title { color: var(--text-light-gray); font-weight: 600; margin-top: 0; margin-bottom: 1rem; }
+        .expert-card .bio { font-size: 0.9rem; color: #666; }
+        .page-header { background: var(--light-gray); padding: 3rem 0; text-align: center; }
+        .page-header h1 { font-size: 2.8rem; color: var(--primary-color); }
+        .cfo-agent-launcher { padding: 4rem 2rem; background: var(--light-gray); text-align: center; border-radius: 10px; }
+        .cfo-agent-launcher h2 { margin-top: 0; color: var(--primary-color); }
+        .pricing-section { padding: 4rem 0; text-align: center; }
+        .pricing-section h2 { font-size: 2.8rem; color: var(--primary-color); font-weight: 700; }
+        .pricing-section .subtitle { max-width: 500px; margin: 0.5rem auto 2.5rem auto; color: var(--text-light-gray); }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; align-items: center; }
+        .pricing-card { background: var(--white); padding: 2.5rem 2rem; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.08); border-top: 4px solid var(--secondary-color); transition: transform 0.3s, box-shadow 0.3s; }
+        .pricing-card:hover { transform: translateY(-5px); box-shadow: 0 12px 35px rgba(0,0,0,0.1); }
+        .pricing-card.featured { border-top-color: var(--accent-color); transform: scale(1.05); }
+        .pricing-card h3 { color: var(--primary-color); font-size: 1.4rem; margin-top: 0; }
+        .pricing-card .price-container { margin: 1.5rem 0; color: var(--text-light-gray); font-size: 3rem; font-weight: 700; }
+        .pricing-card .price-container.custom { font-size: 2.5rem; }
+        .pricing-card .billing-info { font-size: 1.2rem; font-weight: 400; margin-left: 5px; }
+        .pricing-card .description { color: var(--text-light-gray); font-size: 0.95rem; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 200; justify-content: center; align-items: center; }
+        .modal-content { background: var(--white); width: 90%; max-width: 500px; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.3); overflow: hidden; display: flex; flex-direction: column; }
+        .modal-header { background: var(--primary-color); color: var(--white); padding: 1rem; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+        .modal-close-btn { background: none; border: none; font-size: 1.5rem; color: var(--white); cursor: pointer; }
+        .chat-body { padding: 1.5rem; min-height: 150px; }
+        .chat-input-group { display: flex; flex-direction: column; margin-bottom: 1rem; }
+        .chat-input-group label { font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .chat-input { padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem; }
+        .chat-options { display: flex; justify-content: flex-end; gap: 0.5rem; flex-wrap: wrap; }
+        .chat-option-btn { padding: 0.75rem 1rem; border: 1px solid #ccc; background: #f9f9f9; border-radius: 5px; cursor: pointer; transition: background-color 0.2s, border-color 0.2s; }
+        .chat-option-btn:hover { background: var(--light-gray); border-color: var(--secondary-color); }
+        .results-summary { border: 1px solid #ddd; border-radius: 5px; padding: 1rem; }
+        .results-summary p { margin: 0.5rem 0; display: flex; justify-content: space-between; }
+        .results-summary span { font-weight: 700; }
+        .results-summary .net-profit span { color: var(--success-color); }
+        .results-summary .net-loss span { color: var(--danger-color); }
+        
+        /* AI BOT WIDGET */
+        #ai-bot-icon { position: fixed; bottom: 25px; right: 25px; width: 60px; height: 60px; background-color: var(--primary-color); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.2); cursor: pointer; z-index: 150; transition: transform 0.3s; }
+        #ai-bot-icon:hover { transform: scale(1.1); }
+        #ai-bot-window { position: fixed; bottom: 100px; right: 25px; width: 370px; height: 500px; max-width: 90vw; max-height: 70vh; background: var(--white); border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); z-index: 140; overflow: hidden; transform: translateY(20px) scale(0.95); opacity: 0; pointer-events: none; transition: transform 0.3s, opacity 0.3s; display: flex; flex-direction: column; }
+        #ai-bot-window.active { transform: translateY(0) scale(1); opacity: 1; pointer-events: all; }
+        #bot-messages { flex-grow: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .bot-message, .user-message { padding: 10px 15px; border-radius: 20px; max-width: 80%; line-height: 1.4; word-wrap: break-word; }
+        .bot-message { background-color: var(--light-gray); text-align: left; align-self: flex-start; }
+        .user-message { background-color: var(--secondary-color); color: var(--white); text-align: left; align-self: flex-end; }
+        #bot-input-area { display: flex; padding: 10px; border-top: 1px solid #ddd; background: var(--white); }
+        #bot-input { flex-grow: 1; border: 1px solid #ccc; border-radius: 20px; padding: 10px 15px; font-size: 1rem; }
+        #bot-send-btn { background: var(--primary-color); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; margin-left: 10px; font-size: 1.5rem; cursor: pointer; flex-shrink: 0; }
+        #bot-messages .chat-options { flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 5px; }
+        #bot-messages .chat-option-btn { width: 100%; text-align: left; box-sizing: border-box; }
+        .typing-indicator { align-self: flex-start; }
+        .typing-indicator span { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background-color: #aaa; margin: 0 2px; animation: typing 1s infinite; }
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+        /* CONTACT PAGE */
+        .contact-section { padding: 4rem 0; }
+        .contact-section .container { display: grid; grid-template-columns: 1fr 1.5fr; gap: 3rem; align-items: flex-start; }
+        .contact-info a { color: var(--primary-color); text-decoration: none; }
+        .contact-form .form-group { margin-bottom: 1.5rem; }
+        .contact-form label { display: block; font-weight: 600; margin-bottom: 0.5rem; }
+        .contact-form input, .contact-form textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-family: var(--font-family); font-size: 1rem; box-sizing: border-box; }
+
+        footer { background: #333; color: var(--white); text-align: center; padding: 1.5rem 0; }
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; }
+            .hero h1 { font-size: 2.5rem; }
+            header .container { flex-direction: column; gap: 1rem; }
+            .contact-section .container { grid-template-columns: 1fr; }
+            .pricing-card.featured { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="#" class="logo" data-page="home">CFO Helper</a>
+            <nav>
+                <ul>
+                    <li><a class="nav-link active" data-page="home">Home</a></li>
+                    <li><a class="nav-link" data-page="services">Services</a></li>
+                    <li><a class="nav-link" data-page="contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="home" class="page-section active">
+            <div class="hero">
+                <div class="container"><h1>Clarity and Control Over Your Financial Future</h1><p>Interactive tools, clear forecasts, and expert guidance to accelerate your growth.</p><a class="btn btn-primary nav-link" data-page="services">Simulate Your Budget</a></div>
+            </div>
+            <div class="live-data-widget">
+                <div class="container"><h3><span class="live-indicator"></span>Live Business Health Metrics</h3><div class="live-data-grid"><div class="live-data-item"><div class="label">Monthly Recurring Revenue</div><div class="value" id="live-mrr">₹0</div></div><div class="live-data-item"><div class="label">Customer Churn Rate</div><div class="value" id="live-churn">0%</div></div><div class="live-data-item"><div class="label">Gross Margin</div><div class="value" id="live-margin">0%</div></div></div><p class="pathway-badge">Live data updates powered by <strong>Pathway</strong></p></div>
+            </div>
+            <div class="features">
+                <div class="container"><div class="feature-card"><h3>📊 Clear Forecasts</h3><p>Our new AI Agent provides instant clarity on your budget scenarios.</p></div><div class="feature-card"><h3>👆 Usable Reports</h3><p>Get simple, actionable outcomes from our budget simulator.</p></div><div class="feature-card"><h3>🤖 AI-Powered Guidance</h3><p>Chat with our AI assistants and simulated experts to get answers fast.</p></div></div>
+            </div>
+            <section id="experts-section" class="experts-section">
+                <div class="container">
+                    <h2>Meet Our Financial Experts</h2>
+                    <div class="experts-grid">
+                        <div class="expert-card" data-expert-id="priya"><div class="expert-photo"><img src="https://placehold.co/120x120/0d47a1/FFFFFF?text=PS" alt="Priya Sharma"></div><h3>Priya Sharma</h3><p class="title">Lead Financial Strategist</p><p class="bio">With 15+ years of experience, Priya specializes in helping SaaS and tech startups scale sustainably.</p></div>
+                        <div class="expert-card" data-expert-id="rohan"><div class="expert-photo"><img src="https://placehold.co/120x120/1976d2/FFFFFF?text=RM" alt="Rohan Mehta"></div><h3>Rohan Mehta</h3><p class="title">Growth & VC Specialist</p><p class="bio">Rohan has a proven track record of securing Series A & B funding for high-growth companies.</p></div>
+                        <div class="expert-card" data-expert-id="anjali"><div class="expert-photo"><img src="https://placehold.co/120x120/ffc107/333333?text=AR" alt="Anjali Rao"></div><h3>Anjali Rao</h3><p class="title">FP&A Expert</p><p class="bio">Anjali is an expert in financial planning and analysis, focusing on optimizing cash flow and profitability.</p></div>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <section id="services" class="page-section">
+            <div class="page-header">
+                <div class="container"><h1>Tools and Services</h1><p>Simulate your budget or choose a plan to get started.</p></div>
+            </div>
+            <div class="cfo-agent-launcher">
+                <div class="container"><h2>CFO Helper Agent</h2><p>Simulate budget scenarios and get clear outcomes in seconds. Click below to start.</p><button id="cfo-agent-btn" class="btn btn-primary">Launch Budget Simulator</button></div>
+            </div>
+            <div id="pricing-section" class="pricing-section">
+                <div class="container">
+                    <h2>Flexible & Transparent Pricing</h2>
+                    <p class="subtitle">Our Flexprice model ensures our services scale with your success.</p>
+                    <div class="pricing-grid">
+                        <div class="pricing-card"><h3>Starter</h3><div class="price-container">₹25,000<span class="billing-info">/month</span></div><p class="description">Essential financial reporting and monthly check-ins.</p></div>
+                        <div class="pricing-card featured"><h3>Growth</h3><div class="price-container">₹50,000<span class="billing-info">/month</span></div><p class="description">Includes forecasting, KPI dashboards, and strategy sessions.</p></div>
+                        <div class="pricing-card"><h3>Enterprise</h3><div class="price-container custom">Custom</div><p class="description">Full fractional CFO services, investor relations, and more.</p></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="page-section">
+            <div class="page-header">
+                <div class="container"><h1>Get in Touch</h1><p>Ready to strengthen your financial strategy? We'd love to hear from you.</p></div>
+            </div>
+            <div class="contact-section">
+                <div class="container">
+                    <div class="contact-info"><h3>Contact Information</h3><p><strong>Email:</strong> <a href="mailto:contact@cfohelper.com">contact@cfohelper.com</a></p><p><strong>Phone:</strong> +91 98765 43210</p><p><strong>Location:</strong> 123 Finance Street, Business Bay, Hyderabad</p></div>
+                    <div class="contact-form"><h3>Send Us a Message</h3><form action="#"><div class="form-group"><label for="name">Full Name</label><input type="text" id="name" name="name" required></div><div class="form-group"><label for="email">Email Address</label><input type="email" id="email" name="email" required></div><div class="form-group"><label for="message">Message</label><textarea id="message" name="message" rows="5" required></textarea></div><button type="submit" class="btn btn-primary">Submit Inquiry</button></form></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container"><p>&copy; 2025 CFO Helper. All Rights Reserved.</p></div>
+    </footer>
+
+    <div id="ai-chat-modal" class="modal-overlay"><div class="modal-content"><div class="modal-header"><span>CFO Helper Agent</span><button id="close-chat-btn" class="modal-close-btn">&times;</button></div><div id="chat-body" class="chat-body"></div></div></div>
+    <div id="ai-bot-icon">💬</div>
+    <div id="ai-bot-window"><div class="modal-header"><span id="bot-header-title">AI Assistant</span><button id="close-bot-btn" class="modal-close-btn">&times;</button></div><div id="bot-messages"></div><div id="bot-input-area"><input type="text" id="bot-input" placeholder="Ask a question..."><button id="bot-send-btn">➤</button></div></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- Page Navigation Logic ---
+            const navLinks = document.querySelectorAll('.nav-link, .logo');
+            const pageSections = document.querySelectorAll('.page-section');
+            function showPage(pageId) {
+                pageSections.forEach(section => section.classList.remove('active'));
+                const targetPage = document.getElementById(pageId);
+                if (targetPage) targetPage.classList.add('active');
+                document.querySelectorAll('.nav-link').forEach(link => { link.classList.remove('active'); if (link.dataset.page === pageId) link.classList.add('active'); });
+                window.scrollTo(0, 0);
+            }
+            navLinks.forEach(link => { link.addEventListener('click', function(event) { event.preventDefault(); const pageId = this.dataset.page; showPage(pageId); }); });
+
+            // --- Live Data Widget Logic ---
+            const mrrEl = document.getElementById('live-mrr');
+            const churnEl = document.getElementById('live-churn');
+            const marginEl = document.getElementById('live-margin');
+            function updateLiveData() {
+                const randomMRR = 1800000 + Math.random() * 400000;
+                const randomChurn = 1.5 + Math.random() * 1;
+                const randomMargin = 55 + Math.random() * 5;
+                mrrEl.textContent = ₹${randomMRR.toLocaleString('en-IN', { maximumFractionDigits: 0 })};
+                churnEl.textContent = ${randomChurn.toFixed(2)}%;
+                marginEl.textContent = ${randomMargin.toFixed(1)}%;
+            }
+            setInterval(updateLiveData, 2500);
+            updateLiveData();
+            
+            // --- CFO HELPER AGENT LOGIC (Budget Simulator) ---
+            const chatModal = document.getElementById('ai-chat-modal');
+            const openChatBtn = document.getElementById('cfo-agent-btn');
+            const closeChatBtn = document.getElementById('close-chat-btn');
+            const chatBody = document.getElementById('chat-body');
+            let userInputs = {};
+            function formatCurrency(num) { return ₹${num.toLocaleString('en-IN', { maximumFractionDigits: 0 })}; }
+            function openChat() { chatModal.style.display = 'flex'; renderChatStep('start'); }
+            function closeChat() { chatModal.style.display = 'none'; userInputs = {}; }
+            function renderChatStep(stepKey) {
+                // (This logic remains the same as the previous version)
+                chatBody.innerHTML = '';
+                let content = '';
+                switch (stepKey) {
+                    case 'start': content = <p>Welcome to the CFO Helper Budget Simulator! I'll ask a few questions to build a scenario and show you the outcome.</p><div><label for="chat-revenue">What is your current monthly revenue (₹)?</label><input type="number" id="chat-revenue" class="chat-input" placeholder="e.g., 2000000"></div><div class="chat-options"><button class="chat-option-btn" onclick="handleChatInput('cogs', 'chat-revenue')">Next</button></div>; break;
+                    case 'cogs': content = <p>Great. Now, what percentage of your revenue is the Cost of Goods Sold (COGS)?</p><div><label for="chat-cogs">COGS (%)</label><input type="number" id="chat-cogs" class="chat-input" placeholder="e.g., 40"></div><div class="chat-options"><button class="chat-option-btn" onclick="handleChatInput('opex', 'chat-cogs')">Next</button></div>; break;
+                    case 'opex': content = <p>Understood. What are your total fixed monthly operating expenses?</p><div><label for="chat-opex">Monthly Operating Expenses (₹)</label><input type="number" id="chat-opex" class="chat-input" placeholder="e.g., 800000"></div><div class="chat-options"><button class="chat-option-btn" onclick="handleChatInput('results', 'chat-opex')">Calculate Outcome</button></div>; break;
+                    case 'results': const { revenue, cogs, opex } = userInputs; const grossProfit = revenue * (1 - cogs / 100); const netProfit = grossProfit - opex; const netMargin = (netProfit / revenue * 100).toFixed(1); const profitClass = netProfit >= 0 ? 'net-profit' : 'net-loss'; content = <p>Based on your inputs, here is a snapshot:</p><div class="results-summary"><p>Revenue: <span>${formatCurrency(revenue)}</span></p><p>Gross Profit: <span>${formatCurrency(grossProfit)}</span></p><p class="${profitClass}">Net Profit/Loss: <span>${formatCurrency(netProfit)}</span></p><p>Net Profit Margin: <span>${netMargin}%</span></p></div><p>Would you like to see how a small change could impact this?</p><div class="chat-options"><button class="chat-option-btn" onclick="renderChatStep('simulateRevenue')">Simulate +10% Revenue</button><button class="chat-option-btn" onclick="goToExperts()">Talk to an Expert</button></div>; break;
+                    case 'simulateRevenue': const originalNet = (userInputs.revenue * (1 - userInputs.cogs / 100)) - userInputs.opex; const newRevenue = userInputs.revenue * 1.10; const newGrossProfit = newRevenue * (1 - userInputs.cogs / 100); const newNetProfit = newGrossProfit - userInputs.opex; const improvement = newNetProfit - originalNet; content = <p>By increasing revenue by 10% to <strong>${formatCurrency(newRevenue)}</strong>, your new Net Profit would be:</p><div class="results-summary"><p class="net-profit">New Net Profit: <span>${formatCurrency(newNetProfit)}</span></p></div><p>That's an improvement of <strong>${formatCurrency(improvement)}</strong>!</p><div class="chat-options"><button class="chat-option-btn" onclick="renderChatStep('contactPrompt')">Discuss Your Strategy</button></div>; break;
+                    case 'contactPrompt': content = <p>Our experts can help you build a detailed financial model.</p><p>Shall we connect you with our team?</p><div class="chat-options"><button class="btn btn-primary" onclick="goToContact()">Yes, Please Connect Me</button></div>; break;
+                }
+                chatBody.innerHTML = content;
+            }
+            window.handleChatInput = function(nextStep, inputId) { const input = document.getElementById(inputId); if (input.value && !isNaN(parseFloat(input.value))) { userInputs[inputId.replace('chat-', '')] = parseFloat(input.value); renderChatStep(nextStep); } else { alert('Please enter a valid number.'); } }
+            window.goToContact = function() { closeChat(); showPage('contact'); }
+            window.goToExperts = function() { closeChat(); showPage('home'); setTimeout(() => { document.getElementById('experts-section').scrollIntoView({ behavior: 'smooth' }); }, 100); }
+            openChatBtn.addEventListener('click', openChat);
+            closeChatBtn.addEventListener('click', closeChat);
+            chatModal.addEventListener('click', (event) => { if (event.target === chatModal) closeChat(); });
+
+            // --- AI BOT & EXPERT CHAT LOGIC ---
+            const botWindow = document.getElementById('ai-bot-window');
+            const botIcon = document.getElementById('ai-bot-icon');
+            const closeBotBtn = document.getElementById('close-bot-btn');
+            const botHeaderTitle = document.getElementById('bot-header-title');
+            const botMessages = document.getElementById('bot-messages');
+            const botInput = document.getElementById('bot-input');
+            const botSendBtn = document.getElementById('bot-send-btn');
+            const expertCards = document.querySelectorAll('.expert-card');
+            let currentChatMode = 'general';
+            let currentExpertId = null;
+
+            const knowledgeBase = {
+                general: [
+                    { keywords: ['price', 'pricing', 'cost', 'plans'], response: 'Our services are available in three tiers: Starter, Growth, and Enterprise. I can take you to the pricing section to see the details.', action: 'scroll_to', target: 'pricing-section' },
+                    { keywords: ['expert', 'team', 'who are you', 'people'], response: 'Our team consists of seasoned financial professionals. I can show you their profiles on our homepage.', action: 'scroll_to', target: 'experts-section' },
+                    { keywords: ['simulate', 'budget', 'calculator', 'forecast'], response: 'I can launch our CFO Helper Agent, which will guide you through a budget simulation.', action: 'launch_simulator' },
+                    { keywords: ['contact', 'phone', 'email', 'talk'], response: 'You can reach our team via the contact page to schedule a consultation.', action: 'go_to_contact' }
+                ],
+                priya: {
+                    name: "Priya Sharma",
+                    greeting: "Hello, I'm Priya. I specialize in financial strategies for SaaS and tech startups. What can I help you with? You can ask me about <b>runway</b>, <b>burn rate</b>, or <b>SaaS metrics</b>.",
+                    knowledge: [
+                        { keywords: ['saas', 'metrics', 'kpi'], response: 'For SaaS businesses, key metrics include Monthly Recurring Revenue (MRR), Customer Acquisition Cost (CAC), Lifetime Value (LTV), and Churn Rate. A healthy LTV:CAC ratio is typically 3:1 or higher.' },
+                        { keywords: ['runway', 'cash'], response: 'Your cash runway is the number of months your company can operate before running out of money. It\'s calculated by dividing your current cash balance by your monthly net burn rate.' },
+                        { keywords: ['burn rate'], response: 'Burn rate is the speed at which a company is spending its capital. Net burn is cash in minus cash out. It\'s a critical metric for managing your runway and planning fundraising.' }
+                    ]
+                },
+                rohan: {
+                    name: "Rohan Mehta",
+                    greeting: "Hi, I'm Rohan. I focus on growth and venture capital. Feel free to ask me about <b>funding</b>, <b>valuation</b>, or preparing a <b>pitch</b>.",
+                    knowledge: [
+                        { keywords: ['funding', 'vc', 'venture capital', 'series a'], response: 'When raising a round, a compelling pitch deck is crucial. It must clearly articulate the problem, your solution, market size, traction, your team, and your financial projections. I can help you prepare that.' },
+                        { keywords: ['valuation'], response: 'Early-stage valuation is more of an art than a science. It\'s determined by factors like your team, market size, traction, and comparable deals in the market. A common method for pre-revenue startups is the Berkus Method.' },
+                        { keywords: ['pitch', 'deck'], response: 'A strong pitch deck should be a concise and compelling story. Lead with the problem, follow with your unique solution, and back it up with solid data on market size and traction. Keep it to 10-15 slides.' }
+                    ]
+                },
+                anjali: {
+                    name: "Anjali Rao",
+                    greeting: "I'm Anjali. My expertise is in Financial Planning & Analysis (FP&A). You can ask me about improving <b>profitability</b>, managing <b>cash flow</b>, or <b>forecasting</b>.",
+                    knowledge: [
+                        { keywords: ['profit', 'profitability', 'margin'], response: 'To improve profitability, focus on two main levers: increasing your gross margin by reducing COGS, and optimizing your operating expenses. A detailed variance analysis can reveal where you are overspending.' },
+                        { keywords: ['cash flow'], response: 'Positive cash flow is essential. A key strategy is to manage your working capital effectively. This means shortening your accounts receivable cycle (getting paid faster) and extending your accounts payable cycle where possible.' },
+                        { keywords: ['forecast', 'budget'], response: 'A budget is a static plan, while a forecast is a living document. I recommend implementing a rolling forecast that you update monthly or quarterly. This allows you to adapt to changing market conditions quickly.' }
+                    ]
+                }
+            };
+
+            function toggleBot(show) { botWindow.classList.toggle('active', show); if (show) botInput.focus(); }
+
+            function addUserMessage(text) {
+                const messageEl = document.createElement('div');
+                messageEl.className = 'user-message';
+                messageEl.textContent = text;
+                botMessages.appendChild(messageEl);
+                botMessages.scrollTop = botMessages.scrollHeight;
+            }
+
+            function addBotMessage(html, options = null) {
+                const messageEl = document.createElement('div');
+                messageEl.className = 'bot-message';
+                messageEl.innerHTML = html;
+                if (options) {
+                    const optionsContainer = document.createElement('div');
+                    optionsContainer.className = 'chat-options';
+                    options.forEach(opt => {
+                        const btn = document.createElement('button');
+                        btn.className = 'chat-option-btn';
+                        btn.textContent = opt.text;
+                        btn.onclick = () => handleBotAction(opt.action, opt.target);
+                        optionsContainer.appendChild(btn);
+                    });
+                    messageEl.appendChild(optionsContainer);
+                }
+                botMessages.appendChild(messageEl);
+                botMessages.scrollTop = botMessages.scrollHeight;
+            }
+            
+            function showTypingIndicator() {
+                const typingEl = document.createElement('div');
+                typingEl.className = 'bot-message typing-indicator';
+                typingEl.innerHTML = '<span></span><span></span><span></span>';
+                botMessages.appendChild(typingEl);
+                botMessages.scrollTop = botMessages.scrollHeight;
+                return typingEl;
+            }
+
+            function findResponse(query) {
+                const typing = showTypingIndicator();
+                setTimeout(() => {
+                    typing.remove();
+                    query = query.toLowerCase();
+                    const kb = currentChatMode === 'expert' ? knowledgeBase[currentExpertId].knowledge : knowledgeBase.general;
+                    for (const item of kb) {
+                        if (item.keywords.some(keyword => query.includes(keyword))) {
+                            addBotMessage(item.response, item.action ? [{ text: 'Yes, take me there', action: item.action, target: item.target }] : null);
+                            return;
+                        }
+                    }
+                    const fallback = currentChatMode === 'expert' ? I can best answer questions about my specialty. Try asking about the topics I mentioned earlier. : "I'm sorry, I didn't quite understand that. You can ask me about 'pricing', 'experts', or 'budget simulation'.";
+                    addBotMessage(fallback);
+                }, 1200); // Simulate API call delay
+            }
+            
+            function handleUserInput() {
+                const query = botInput.value.trim();
+                if (!query) return;
+                addUserMessage(query);
+                botInput.value = '';
+                findResponse(query);
+            }
+
+            function openExpertChat(expertId) {
+                currentChatMode = 'expert';
+                currentExpertId = expertId;
+                const expert = knowledgeBase[expertId];
+                botHeaderTitle.textContent = Chat with ${expert.name};
+                botMessages.innerHTML = '';
+                addBotMessage(expert.greeting);
+                toggleBot(true);
+            }
+
+            botIcon.addEventListener('click', () => {
+                currentChatMode = 'general';
+                botHeaderTitle.textContent = 'AI Assistant';
+                botMessages.innerHTML = '';
+                addBotMessage('Welcome to CFO Helper! How can I assist you today?', knowledgeBase.general[0].options); // Simplified
+                toggleBot(true);
+            });
+
+            expertCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    openExpertChat(card.dataset.expertId);
+                });
+            });
+
+            closeBotBtn.addEventListener('click', () => toggleBot(false));
+            botSendBtn.addEventListener('click', handleUserInput);
+            botInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleUserInput(); });
+
+            window.handleBotAction = function(action, target) {
+                toggleBot(false);
+                switch (action) {
+                    case 'launch_simulator': openChat(); break;
+                    case 'scroll_to': const targetPage = target === 'experts-section' ? 'home' : 'services'; showPage(targetPage); setTimeout(() => { document.getElementById(target).scrollIntoView({ behavior: 'smooth' }); }, 100); break;
+                    case 'go_to_contact': showPage('contact'); break;
+                }
+            }
+            
+            // --- Initial Calls ---
+            showPage('home');
+        });
+    </script>
+</body>
+</html>
